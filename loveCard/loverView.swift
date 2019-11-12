@@ -18,6 +18,8 @@ struct loverView: View {
     @Binding var selectHobby:String
     @State private var scale: CGFloat = 1
     @State private var brightnessAmount: Double = 0
+    @State private var moveDistance: CGFloat = 0
+    @State private var opacity: Double = 1
     @State private var selectIndex = 0
     @State private var showAlert = false
     var body: some View {
@@ -30,6 +32,7 @@ struct loverView: View {
                     .background(Color.orange)
                     .cornerRadius(30)
                 personView(profileIndex: self.$profileIndex, name: self.$name, age: self.$age, birthday: self.$birthday, selectHair: self.$selectHair, selectHobby: self.$selectHobby)
+                heartMove(moveDistance: $moveDistance, opacity: $opacity)
             }
             if selectHair == "長髮"{
                 VStack{
@@ -210,9 +213,9 @@ struct personView: View {
                 Image(profiles[profileIndex])
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 100, height: 100)
+                    .frame(width: 80, height: 80)
                     .clipShape(Circle())
-                VStack(alignment: .leading, spacing: 10){
+                VStack(alignment: .leading, spacing: 5){
                     Text("喜歡女生髮型: \(selectHair)")
                         .foregroundColor(Color.purple)
                     Text("你的興趣: \(selectHobby)")
@@ -223,5 +226,26 @@ struct personView: View {
                 .font(Font.custom("Cochin Italic", size: 20))
                 .foregroundColor(Color.green)
         }
+    }
+}
+
+struct heartMove: View {
+    @Binding var moveDistance: CGFloat
+    @Binding var opacity: Double
+    var body: some View {
+        HStack {
+            Image("heart")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 40, height: 25)
+                .offset(x: moveDistance, y: 0)
+                .opacity(opacity)
+            Spacer()
+        }
+        .onAppear {
+            self.moveDistance += 400
+            self.opacity -= 0.3
+        }
+        .animation(Animation.linear(duration: 5).repeatForever(autoreverses: false))
     }
 }
